@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pantry & Plate — 재료별 홈쿠킹 레시피 북</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fraunces, Playfair Display, Noto Serif KR, Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800;9..144,900&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@500;600;700;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap"
+    rel="stylesheet"
+  />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: {
+              DEFAULT: '#FBF9F5',
+              dark: '#F3EFE6',
+              card: '#F7F3EB',
+            },
+            crimson: {
+              DEFAULT: '#A6332E',
+              dark: '#872420',
+              light: '#C8524C',
+              soft: 'rgba(166, 51, 46, 0.08)',
+            },
+            ink: {
+              DEFAULT: '#3A2321',
+              muted: '#7B5B57',
+            },
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Playfair Display', 'Noto Serif KR', 'serif'],
+            serif: ['Noto Serif KR', 'Playfair Display', 'serif'],
+            sans: ['Noto Sans KR', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* 빈티지 크림 종이 질감 효과 */
+    body {
+      background-color: #FBF9F5;
+      color: #A6332E;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-image:
+        radial-gradient(rgba(166, 51, 46, 0.03) 1px, transparent 0),
+        radial-gradient(rgba(139, 108, 78, 0.035) 1px, transparent 0);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+
+    /* 레퍼런스 이미지의 타원형 이중 테두리 로고 엠블럼 */
+    .oval-emblem-outer {
+      border: 2.5px solid #A6332E;
+      border-radius: 50%;
+      padding: 6px;
+      display: inline-block;
+      box-shadow: 0 2px 0 rgba(166, 51, 46, 0.06);
+    }
+    .oval-emblem-inner {
+      border: 1.5px solid #A6332E;
+      border-radius: 50%;
+      padding: 16px 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background-color: rgba(251, 249, 245, 0.7);
+    }
+
+    @media (max-width: 640px) {
+      .oval-emblem-inner {
+        padding: 12px 24px;
+        gap: 10px;
+      }
+    }
+
+    /* 레퍼런스 하단의 작은 타원형 NEW / BEST 배지 */
+    .oval-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.2px solid #A6332E;
+      border-radius: 9999px;
+      padding: 1px 11px;
+      font-family: 'Playfair Display', 'Noto Serif KR', serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.3;
+      color: #A6332E;
+      background-color: #FBF9F5;
+    }
+
+    /* 레시피 카드 이미지 호버 효과 및 크림 배경 조화 */
+    .recipe-photo-wrap {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      margin: 0 auto;
+      border-radius: 50% 50% 46% 46% / 48% 48% 52% 52%;
+      overflow: hidden;
+      background-color: #F3EFE6;
+      border: 1.5px solid rgba(166, 51, 46, 0.16);
+      box-shadow: 0 10px 24px -10px rgba(92, 34, 30, 0.22);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    .recipe-card:hover .recipe-photo-wrap {
+      transform: translateY(-6px) scale(1.03);
+      border-color: rgba(166, 51, 46, 0.45);
+      box-shadow: 0 16px 30px -10px rgba(166, 51, 46, 0.28);
+    }
+
+    .recipe-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .recipe-card:hover .recipe-photo-wrap img {
+      transform: scale(1.06);
+    }
+
+    /* 스크롤바 스타일링 */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FBF9F5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(166, 51, 46, 0.3);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(166, 51, 46, 0.55);
+    }
+
+    /* 모달 애니메이션 */
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .animate-modal {
+      animation: modalFadeIn 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-crimson selection:text-cream">
+
+  <!-- 상단 네비게이션 바 (레퍼런스의 미니멀 1px 하단 보더 구조) -->
+  <header class="sticky top-0 z-30 bg-cream/95 backdrop-blur-sm border-b border-crimson">
+    <div class="max-w-6xl mx-auto px-4 sm:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <!-- 좌측 소형 브랜드 로고 -->
+      <a href="#top" onclick="resetFilters(); return false;" class="font-display font-black text-base sm:text-lg tracking-tight text-crimson hover:opacity-80 transition-opacity">
+        Pantry &amp; Plate
+      </a>
+
+      <!-- 중앙 메뉴 링크 -->
+      <nav class="hidden md:flex items-center space-x-8 lg:space-x-10 text-xs font-serif font-semibold tracking-widest uppercase">
+        <button onclick="setNavView('all')" id="nav-all" class="nav-link py-1 border-b border-crimson text-crimson transition-colors">
+          ALL RECIPES
+        </button>
+        <button onclick="setNavView('ingredients')" id="nav-ingredients" class="nav-link py-1 border-b border-transparent text-crimson/70 hover:text-crimson transition-colors">
+          BY INGREDIENT
+        </button>
+        <button onclick="setNavView('quick')" id="nav-quick" class="nav-link py-1 border-b border-transparent text-crimson/70 hover:text-crimson transition-colors">
+          15-MIN QUICK
+        </button>
+        <button onclick="setNavView('saved')" id="nav-saved" class="nav-link py-1 border-b border-transparent text-crimson/70 hover:text-crimson transition-colors flex items-center gap-1.5">
+          <span>SCRAPBOOK</span>
+          <span id="nav-saved-count" class="inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] rounded-full bg-crimson text-cream font-sans font-bold">0</span>
+        </button>
+      </nav>
+
+      <!-- 우측 아이콘 버튼 (검색, 스크랩북, 레시피 추가) -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button
+          onclick="toggleSearchBar()"
+          aria-label="재료 및 레시피 검색"
+          title="재료 검색"
+          class="p-2 rounded-full text-crimson hover:bg-crimson/10 transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <path stroke-linecap="round" d="M20 20l-3.5-3.5" />
+          </svg>
+        </button>
+
+        <button
+          onclick="setNavView(currentView === 'saved' ? 'all' : 'saved')"
+          aria-label="스크랩한 레시피 보기"
+          title="스크랩북"
+          class="relative p-2 rounded-full text-crimson hover:bg-crimson/10 transition-colors"
+        >
+          <svg id="header-bookmark-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 4h12a1 1 0 011 1v15l-7-4-7 4V5a1 1 0 011-1z" />
+          </svg>
+          <span id="mobile-saved-dot" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-crimson"></span>
+        </button>
+
+        <button
+          onclick="openAddModal()"
+          class="ml-1 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-crimson text-xs font-serif font-semibold text-crimson hover:bg-crimson hover:text-cream transition-colors"
+        >
+          <span>+ 레시피 등록</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 토글형 재료 검색 바 -->
+    <div id="search-drawer" class="hidden border-t border-crimson/20 bg-cream-dark/80 px-4 py-3">
+      <div class="max-w-xl mx-auto flex items-center gap-2">
+        <div class="relative flex-1">
+          <input
+            type="text"
+            id="search-input"
+            oninput="handleSearch(this.value)"
+            placeholder="냉장고 속 재료를 입력하세요 (예: 계란, 대파, 간장, 두부, 베이컨...)"
+            class="w-full pl-9 pr-8 py-2 rounded-full bg-cream border border-crimson/40 text-sm text-ink placeholder-ink-muted/60 focus:outline-none focus:border-crimson"
+          />
+          <svg class="w-4 h-4 text-crimson/60 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <path stroke-linecap="round" d="M20 20l-3.5-3.5" />
+          </svg>
+          <button
+            id="clear-search-btn"
+            onclick="clearSearch()"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-xs text-crimson/70 hover:text-crimson"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <main id="top" class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 pt-10 sm:pt-14 pb-20">
+    
+    <!-- 히어로 배너: 레퍼런스의 타원형 이중 보더 엠블럼 & 사각 별 장식 -->
+    <section class="text-center mb-8 sm:mb-10">
+      <div class="oval-emblem-outer">
+        <div class="oval-emblem-inner">
+          <span class="text-crimson text-sm sm:text-base select-none" aria-hidden="true">✦</span>
+          <h1 class="font-display font-black text-2xl sm:text-4xl md:text-[42px] tracking-tight text-crimson leading-none">
+            Pantry &amp; Plate
+          </h1>
+          <span class="text-crimson text-sm sm:text-base select-none" aria-hidden="true">✦</span>
+        </div>
+      </div>
+      <p class="mt-3 text-xs sm:text-sm font-serif text-ink-muted tracking-wide">
+        냉장고 속 주재료로 고르는 오늘의 따뜻한 집밥 레시피 컬렉션
+      </p>
+    </section>
+
+    <!-- 주재료 카테고리 탭 (레퍼런스의 CAKE / DESSERT / DRINK 간격 및 서체 감성 반영) -->
+    <section aria-label="주재료 카테고리 필터" class="mb-10 sm:mb-14">
+      <div id="ingredient-tabs" class="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-8 gap-y-2.5 text-xs sm:text-[13px] font-serif tracking-wider">
+        <!-- JS로 렌더링됨 -->
+      </div>
+
+      <!-- 현재 필터 상태 및 결과 요약 바 -->
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs text-ink-muted">
+        <span id="filter-status-text">전체 레시피 9선</span>
+        <button
+          id="reset-all-btn"
+          onclick="resetFilters()"
+          class="hidden underline text-crimson hover:text-crimson-dark ml-1 font-medium"
+        >
+          필터 초기화
+        </button>
+      </div>
+    </section>
+
+    <!-- 레시피 3열 쇼케이스 그리드 -->
+    <section aria-label="레시피 목록">
+      <div id="recipe-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 sm:gap-y-14">
+        <!-- JS로 레시피 카드 렌더링 -->
+      </div>
+
+      <!-- 검색/필터 결과 없음 안내 -->
+      <div id="empty-state" class="hidden text-center py-16 px-4 border border-dashed border-crimson/30 rounded-2xl bg-cream-card/50 max-w-md mx-auto">
+        <p class="font-serif text-lg font-bold text-crimson mb-2">조건에 맞는 레시피가 없어요</p>
+        <p class="text-xs sm:text-sm text-ink-muted mb-5">다른 주재료 탭을 선택하거나 새로운 나만의 레시피를 등록해 보세요.</p>
+        <div class="flex items-center justify-center gap-3">
+          <button onclick="resetFilters()" class="px-4 py-2 rounded-full border border-crimson text-xs font-serif font-semibold text-crimson hover:bg-crimson hover:text-cream transition-colors">
+            전체 레시피 보기
+          </button>
+          <button onclick="openAddModal()" class="px-4 py-2 rounded-full bg-crimson text-xs font-serif font-semibold text-cream hover:bg-crimson-dark transition-colors">
+            + 레시피 등록
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="border-t border-crimson/30 py-8 px-4 text-center text-xs text-ink-muted font-serif">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span class="font-display font-bold text-crimson text-sm">Pantry &amp; Plate</span>
+      <span>주재료 중심의 아카이브형 요리 레시피 노트 · Homemade Kitchen Journal</span>
+      <span class="text-[11px] opacity-75">계란 · 감자 · 두부 · 돼지고기 · 토마토</span>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       1. 빈티지 레시피 카드 상세 모달 (Recipe Index Card Modal)
+       ========================================== -->
+  <div
+    id="recipe-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/50 backdrop-blur-[2px]"
+    onclick="if(event.target === this) closeRecipeModal()"
+  >
+    <div class="animate-modal relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-cream border-2 border-crimson shadow-2xl p-5 sm:p-8 text-ink">
+      <!-- 모달 내부 장식용 이중 테두리 헤더 -->
+      <div class="flex items-start justify-between gap-4 pb-4 border-b border-crimson/25">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1.5">
+            <span id="modal-ingredient-tag" class="oval-pill-badge">계란 · EGG</span>
+            <span id="modal-badge" class="oval-pill-badge">BEST</span>
+          </div>
+          <h2 id="modal-title" class="font-serif font-bold text-xl sm:text-2xl text-crimson">
+            레시피 제목
+          </h2>
+          <p id="modal-subtitle" class="text-xs sm:text-sm text-ink-muted mt-1">
+            조리시간 15분 · 난이도 하 · 2인분 기준
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- 스크랩 토글 버튼 -->
+          <button
+            id="modal-scrap-btn"
+            onclick="toggleScrapCurrent()"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-crimson text-xs font-serif font-semibold transition-colors"
+          >
+            <svg id="modal-scrap-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 4h12a1 1 0 011 1v15l-7-4-7 4V5a1 1 0 011-1z" />
+            </svg>
+            <span id="modal-scrap-text">스크랩하기</span>
+          </button>
+
+          <!-- 닫기 버튼 -->
+          <button
+            onclick="closeRecipeModal()"
+            aria-label="닫기"
+            class="w-9 h-9 rounded-full border border-crimson/30 flex items-center justify-center text-crimson hover:bg-crimson hover:text-cream transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- 상단 이미지 + 요리 한줄 소개 -->
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
+        <div class="sm:col-span-5">
+          <div class="aspect-square rounded-2xl overflow-hidden border border-crimson/25 bg-cream-dark">
+            <img id="modal-image" src="" alt="" class="w-full h-full object-cover" />
+          </div>
+        </div>
+        <div class="sm:col-span-7 flex flex-col justify-between space-y-3">
+          <div class="p-4 rounded-xl bg-cream-card border border-crimson/15">
+            <span class="block text-[11px] font-serif uppercase tracking-widest text-crimson/70 mb-1">Chef's Note</span>
+            <p id="modal-description" class="text-sm leading-relaxed text-ink">
+              요리 설명이 여기에 표시됩니다.
+            </p>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="p-2.5 rounded-xl border border-crimson/20 bg-cream">
+              <span class="block text-[10px] font-serif text-ink-muted">조리 시간</span>
+              <span id="modal-time" class="font-serif font-bold text-sm text-crimson">15분</span>
+            </div>
+            <div class="p-2.5 rounded-xl border border-crimson/20 bg-cream">
+              <span class="block text-[10px] font-serif text-ink-muted">난이도</span>
+              <span id="modal-difficulty" class="font-serif font-bold text-sm text-crimson">하</span>
+            </div>
+            <div class="p-2.5 rounded-xl border border-crimson/20 bg-cream">
+              <span class="block text-[10px] font-serif text-ink-muted">분량</span>
+              <span id="modal-servings" class="font-serif font-bold text-sm text-crimson">2인분</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 재료 체크리스트 & 조리 순서 -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6 pt-5 border-t border-crimson/20">
+        <!-- 좌측: 재료 체크리스트 -->
+        <div class="md:col-span-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-serif font-bold text-base text-crimson flex items-center gap-1.5">
+              <span>✦</span> 준비 재료
+            </h3>
+            <span id="ingredient-check-progress" class="text-[11px] text-ink-muted font-medium">0/0 준비됨</span>
+          </div>
+          <ul id="modal-ingredients-list" class="space-y-2 text-sm">
+            <!-- JS로 체크박스 아이템 렌더링 -->
+          </ul>
+        </div>
+
+        <!-- 우측: 단계별 조리법 -->
+        <div class="md:col-span-7">
+          <h3 class="font-serif font-bold text-base text-crimson flex items-center gap-1.5 mb-3">
+            <span>✦</span> 만드는 순서
+          </h3>
+          <ol id="modal-steps-list" class="space-y-3 text-sm leading-relaxed">
+            <!-- JS로 스텝 렌더링 -->
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       2. 새 레시피 등록 모달 (Add New Recipe Modal)
+       ========================================== -->
+  <div
+    id="add-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/50 backdrop-blur-[2px]"
+    onclick="if(event.target === this) closeAddModal()"
+  >
+    <div class="animate-modal relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-cream border-2 border-crimson shadow-2xl p-5 sm:p-7 text-ink">
+      <div class="flex items-center justify-between pb-3 border-b border-crimson/25">
+        <div>
+          <span class="text-[11px] font-serif uppercase tracking-widest text-crimson/70">New Kitchen Note</span>
+          <h2 class="font-serif font-bold text-xl text-crimson">새 레시피 카드 추가</h2>
+        </div>
+        <button
+          onclick="closeAddModal()"
+          class="w-8 h-8 rounded-full border border-crimson/30 flex items-center justify-center text-crimson hover:bg-crimson hover:text-cream transition-colors"
+        >
+          ✕
+        </button>
+      </div>
+
+      <form id="add-recipe-form" onsubmit="handleAddRecipe(event)" class="mt-4 space-y-4 text-sm">
+        <div>
+          <label class="block font-serif font-semibold text-xs text-crimson mb-1">요리 이름 *</label>
+          <input
+            type="text"
+            id="new-title"
+            required
+            placeholder="예: 폭신폭신 명란 계란말이"
+            class="w-full px-3.5 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-serif font-semibold text-xs text-crimson mb-1">주재료 카테고리 *</label>
+            <select
+              id="new-category"
+              class="w-full px-3 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+            >
+              <option value="계란">계란 (EGG)</option>
+              <option value="감자">감자 (POTATO)</option>
+              <option value="두부">두부 (TOFU)</option>
+              <option value="돼지고기">돼지고기 (PORK)</option>
+              <option value="토마토">토마토 (TOMATO)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-serif font-semibold text-xs text-crimson mb-1">배지 라벨</label>
+            <select
+              id="new-badge"
+              class="w-full px-3 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+            >
+              <option value="NEW">NEW</option>
+              <option value="BEST">BEST</option>
+              <option value="HOMEMADE">HOMEMADE</option>
+              <option value="">표시 안함</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block font-serif font-semibold text-xs text-crimson mb-1">조리 시간 *</label>
+            <input
+              type="text"
+              id="new-time"
+              required
+              value="15분"
+              placeholder="15분"
+              class="w-full px-3 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+            />
+          </div>
+          <div>
+            <label class="block font-serif font-semibold text-xs text-crimson mb-1">난이도</label>
+            <select
+              id="new-difficulty"
+              class="w-full px-3 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+            >
+              <option value="하">난이도 하</option>
+              <option value="중">난이도 중</option>
+              <option value="상">난이도 상</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-serif font-semibold text-xs text-crimson mb-1">분량</label>
+            <input
+              type="text"
+              id="new-servings"
+              value="2인분"
+              placeholder="2인분"
+              class="w-full px-3 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-serif font-semibold text-xs text-crimson mb-1">한줄 소개 *</label>
+          <input
+            type="text"
+            id="new-desc"
+            required
+            placeholder="요리의 맛과 특징을 간단히 적어주세요."
+            class="w-full px-3.5 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+          />
+        </div>
+
+        <div>
+          <label class="block font-serif font-semibold text-xs text-crimson mb-1">필요한 재료 (쉼표로 구분) *</label>
+          <input
+            type="text"
+            id="new-ingredients"
+            required
+            placeholder="예: 계란 4개, 명란젓 1덩이, 대파 1/3대, 맛술 1큰술, 식용유"
+            class="w-full px-3.5 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+          />
+        </div>
+
+        <div>
+          <label class="block font-serif font-semibold text-xs text-crimson mb-1">조리 순서 (줄바꿈으로 단계 구분) *</label>
+          <textarea
+            id="new-steps"
+            rows="3"
+            required
+            placeholder="볼에 계란과 맛술을 넣고 곱게 풀어줍니다.&#10;명란은 껍질을 제거해 알만 긁어 준비합니다.&#10;약불 팬에 기름을 두르고 돌돌 말아가며 익혀줍니다."
+            class="w-full px-3.5 py-2 rounded-xl bg-cream-card border border-crimson/30 focus:outline-none focus:border-crimson"
+          ></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onclick="closeAddModal()"
+            class="px-4 py-2 rounded-full border border-crimson/40 text-xs font-serif font-semibold text-crimson hover:bg-crimson/5"
+          >
+            취소
+          </button>
+          <button
+            type="submit"
+            class="px-5 py-2 rounded-full bg-crimson text-xs font-serif font-semibold text-cream hover:bg-crimson-dark transition-colors shadow-sm"
+          >
+            레시피 카드 저장
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 메시지 -->
+  <div
+    id="toast"
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 translate-y-2"
+  >
+    <div class="px-5 py-2.5 rounded-full bg-crimson text-cream text-xs font-serif tracking-wide shadow-lg border border-cream/20">
+      <span id="toast-message">알림 메시지</span>
+    </div>
+  </div>
+
+  <!-- 자바스크립트: 데이터 및 인터랙티브 로직 -->
+  <script>
+    // 주재료 카테고리 정의
+    const CATEGORIES = [
+      { id: 'ALL', label: 'ALL', sub: '전체' },
+      { id: '계란', label: '계란 (EGG)', sub: '계란' },
+      { id: '감자', label: '감자 (POTATO)', sub: '감자' },
+      { id: '두부', label: '두부 (TOFU)', sub: '두부' },
+      { id: '돼지고기', label: '돼지고기 (PORK)', sub: '돼지고기' },
+      { id: '토마토', label: '토마토 (TOMATO)', sub: '토마토' },
+    ];
+
+    // 카테고리별 기본 폴백 이미지
+    const CATEGORY_FALLBACK_IMAGES = {
+      '계란': 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=640&q=80',
+      '감자': 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=640&q=80',
+      '두부': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=640&q=80',
+      '돼지고기': 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=640&q=80',
+      '토마토': 'https://images.unsplash.com/photo-1546549032-9571cd6b27df?auto=format&fit=crop&w=640&q=80',
+    };
+
+    // 초기 큐레이션 레시피 9선 (계란, 감자, 두부, 돼지고기, 토마토 주재료 기반)
+    const INITIAL_RECIPES = [
+      {
+        id: 1,
+        title: '반숙 간장 계란장 덮밥',
+        category: '계란',
+        time: '15분',
+        minutes: 15,
+        difficulty: '하',
+        servings: '2인분',
+        badge: 'BEST',
+        image: 'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=640&q=80',
+        description: '촉촉한 6분 30초 반숙란에 달큰짭짤한 특제 간장 양념이 배어든 든든한 한 그릇 덮밥입니다. 따뜻한 밥 위에 버터 한 조각과 함께 비벼 드세요.',
+        ingredients: [
+          '실온 계란 6개',
+          '양조간장 100ml',
+          '생수 100ml',
+          '올리고당 3큰술',
+          '다진 대파 3큰술',
+          '홍고추·청양고추 1개씩',
+          '통깨 1큰술',
+          '따뜻한 밥 & 무염버터 약간',
+        ],
+        steps: [
+          '끓는 물에 소금 1작은술과 식초 1큰술을 넣고 냉장고에서 꺼낸 계란을 6분 30초간 삶은 뒤 바로 얼음물에 식혀 껍질을 깝니다.',
+          '밀폐용기에 간장, 물, 올리고당, 송송 썬 대파와 고추, 통깨를 넣고 잘 섞어 양념장을 만듭니다.',
+          '껍질 깐 반숙란을 양념장에 잠기도록 담가 냉장고에서 최소 3시간 이상 숙성시킵니다.',
+          '따뜻한 흰쌀밥 위에 계란장과 양념 2큰술, 버터 작은 한 조각을 올려 완성합니다.',
+        ],
+      },
+      {
+        id: 2,
+        title: '트러플 버터 스크램블 토스트',
+        category: '계란',
+        time: '10분',
+        minutes: 10,
+        difficulty: '하',
+        servings: '1인분',
+        badge: 'NEW',
+        image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=640&q=80',
+        description: '부드럽게 몽글몽글 익힌 프렌치 스타일 스크램블 에그를 바삭하게 구운 사워도우 위에 듬뿍 올린 브런치 메뉴입니다.',
+        ingredients: [
+          '계란 3개',
+          '사워도우 또는 식빵 2장',
+          '무염버터 20g',
+          '생크림 또는 우유 2큰술',
+          '소금 두 꼬집 & 통후추',
+          '쪽파(차이브) 약간',
+        ],
+        steps: [
+          '볼에 계란 3개와 우유(생크림), 소금을 넣고 알끈이 풀릴 정도로 가볍게 섞어줍니다.',
+          '빵은 마른 팬이나 토스터에 노릇하고 바삭하게 구워 접시에 담아둡니다.',
+          '약불로 달군 팬에 버터를 녹인 뒤 계란물을 붓고, 실리콘 주걱으로 바닥을 천천히 긁어가며 80% 정도만 익힙니다.',
+          '구운 빵 위에 촉촉한 스크램블을 소복이 올리고 후추와 송송 썬 쪽파를 뿌려 마무리합니다.',
+        ],
+      },
+      {
+        id: 3,
+        title: '바삭한 스위스 감자채전 (뢰스티)',
+        category: '감자',
+        time: '20분',
+        minutes: 20,
+        difficulty: '하',
+        servings: '2인분',
+        badge: 'BEST',
+        image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=640&q=80',
+        description: '전분기를 살려 얇게 채 썬 감자를 노릇노릇하게 구워 겉은 과자처럼 바삭하고 속은 포슬포슬한 감자 요리입니다.',
+        ingredients: [
+          '수미감자 3개 (중간 크기)',
+          '베이컨 3줄 (선택)',
+          '모짜렐라 치즈 50g',
+          '소금 1/2작은술',
+          '후추 약간',
+          '식용유 3큰술 & 버터 10g',
+        ],
+        steps: [
+          '껍질을 벗긴 감자는 가늘게 채 썰고, 바삭함을 위해 물에 헹구지 않고 소금·후추를 뿌려 5분간 둡니다.',
+          '감자에서 나온 물기만 손으로 가볍게 짜낸 뒤 잘게 썬 베이컨을 섞어줍니다.',
+          '중약불 팬에 식용유와 버터를 두르고 감자채 절반을 둥글게 편 뒤 치즈를 올리고 나머지 감자채로 덮어줍니다.',
+          '앞뒤로 각각 6~7분씩 지그시 눌러가며 황금빛이 날 때까지 바삭하게 구워냅니다.',
+        ],
+      },
+      {
+        id: 4,
+        title: '로즈마리 갈릭 웨지 감자구이',
+        category: '감자',
+        time: '25분',
+        minutes: 25,
+        difficulty: '하',
+        servings: '2인분',
+        badge: '',
+        image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=640&q=80',
+        description: '오븐이나 에어프라이어로 담백하게 구워낸 허브 감자구이입니다. 마늘향과 로즈마리 풍미가 어우러져 간식이나 곁들임 요리로 제격입니다.',
+        ingredients: [
+          '감자 3~4개',
+          '올리브오일 3큰술',
+          '다진 마늘 1큰술',
+          '파마산 치즈가루 2큰술',
+          '로즈마리 또는 파슬리 가루',
+          '굵은 소금 & 후추',
+        ],
+        steps: [
+          '감자는 깨끗이 씻어 껍질째 6~8등분으로 반달 모양(웨지)으로 썰어 찬물에 10분간 담가 전분을 뺍니다.',
+          '키친타월로 감자의 물기를 꼼꼼히 제거한 뒤 볼에 담습니다.',
+          '올리브오일, 다진 마늘, 소금, 후추, 허브를 넣고 골고루 버무립니다.',
+          '190도로 예열한 에어프라이어나 오븐에서 20분간 굽고, 마지막에 파마산 치즈가루를 뿌려 냅니다.',
+        ],
+      },
+      {
+        id: 5,
+        title: '들기름 두부구이와 달래 간장장',
+        category: '두부',
+        time: '15분',
+        minutes: 15,
+        difficulty: '하',
+        servings: '2인분',
+        badge: 'BEST',
+        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=640&q=80',
+        description: '고소한 들기름에 앞뒤로 노릇하게 지져낸 부침용 두부 위에 향긋한 양념장을 얹어 먹는 담백한 한국식 집밥 반찬입니다.',
+        ingredients: [
+          '부침용 두부 1모 (300g)',
+          '들기름 2큰술 & 식용유 1큰술',
+          '소금 약간',
+          '진간장 2.5큰술',
+          '고춧가루 1/2큰술',
+          '송송 썬 대파(또는 달래) 2큰술',
+          '다진 마늘 1/2큰술 & 참깨',
+        ],
+        steps: [
+          '두부는 1.2cm 두께로 먹기 좋게 썰어 소금을 살짝 뿌린 뒤 키친타월로 수분을 충분히 제거합니다.',
+          '볼에 진간장, 고춧가루, 대파, 다진 마늘, 물 1큰술, 통깨를 섞어 양념장을 준비합니다.',
+          '중불로 달군 팬에 들기름과 식용유를 두르고 두부를 올려 앞뒤로 노릇노릇하게 구워줍니다.',
+          '접시에 두부를 가지런히 담고 구워진 두부 위에 양념장을 한 숟가락씩 얹어 완성합니다.',
+        ],
+      },
+      {
+        id: 6,
+        title: '매콤 마파두부 덮밥',
+        category: '두부',
+        time: '20분',
+        minutes: 20,
+        difficulty: '중',
+        servings: '2인분',
+        badge: 'NEW',
+        image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=640&q=80',
+        description: '부드러운 연두부(또는 찌개두부)와 고소한 다진 고기를 두반장 소스에 자작하게 끓여 밥에 쓱쓱 비벼 먹는 일품 요리입니다.',
+        ingredients: [
+          '찌개용 두부 1모',
+          '다진 돼지고기 120g',
+          '대파 1/2대 & 다진 마늘 1큰술',
+          '두반장 1.5큰술',
+          '굴소스 1큰술 & 고춧가루 1큰술',
+          '물 200ml',
+          '전분물 (전분 1 : 물 2)',
+        ],
+        steps: [
+          '두부는 사방 1.5cm 크기의 깍둑썰기로 준비하고 대파는 잘게 송송 썹니다.',
+          '팬에 고추기름(또는 식용유)을 두르고 대파와 마늘을 볶아 향을 낸 뒤 다진 돼지고기를 넣고 볶습니다.',
+          '고기가 익으면 두반장, 고춧가루, 굴소스를 넣고 볶다가 물 200ml와 두부를 넣어 4분간 끓입니다.',
+          '불을 줄이고 전분물을 조금씩 둘러 농도를 맞춘 뒤 참기름 한 방울을 떨어뜨려 밥 위에 올립니다.',
+        ],
+      },
+      {
+        id: 7,
+        title: '생강향 가득 일본식 돼지고기 쇼가야키',
+        category: '돼지고기',
+        time: '15분',
+        minutes: 15,
+        difficulty: '하',
+        servings: '2인분',
+        badge: 'BEST',
+        image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=640&q=80',
+        description: '얇게 썬 돼지고기 목살에 알싸한 생강 간장 소스를 입혀 빠르게 구워낸 요리입니다. 아삭한 채 썬 양배추와 환상의 궁합을 자랑합니다.',
+        ingredients: [
+          '구이용 얇은 돼지목살 300g',
+          '양파 1/2개',
+          '채 썬 양배추 한 줌',
+          '간장 3큰술 & 맛술 3큰술',
+          '간 생강 1큰술 (또는 생강즙)',
+          '설탕 1큰술 & 다진 마늘 1/2큰술',
+        ],
+        steps: [
+          '간장, 맛술, 간 생강, 설탕, 다진 마늘을 한데 섞어 쇼가야키 소스를 만듭니다.',
+          '돼지고기는 키친타월로 핏물을 닦고 한입 크기로 자르며, 양파는 얇게 채 썹니다.',
+          '중강불 팬에 기름을 살짝 두르고 돼지고기와 양파를 넣어 겉면이 노릇해질 때까지 볶습니다.',
+          '준비한 양념장을 붓고 센 불에서 윤기가 돌 때까지 빠르게 졸여낸 뒤 채 썬 양배추 곁들여 담습니다.',
+        ],
+      },
+      {
+        id: 8,
+        title: '매콤 달콤 대파 제육볶음',
+        category: '돼지고기',
+        time: '25분',
+        minutes: 25,
+        difficulty: '중',
+        servings: '3인분',
+        badge: '',
+        image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=640&q=80',
+        description: '불맛을 살려 볶아낸 돼지고기 앞다리살에 듬뿍 넣은 대파의 단맛이 어우러져 언제 먹어도 질리지 않는 한국인의 대표 밥도둑입니다.',
+        ingredients: [
+          '돼지고기 앞다리살 400g',
+          '대파 1대 & 양파 1/2개',
+          '고추장 2큰술 & 고춧가루 2큰술',
+          '진간장 2큰술 & 설탕 1.5큰술',
+          '다진 마늘 1.5큰술 & 맛술 2큰술',
+          '후추 & 참기름 1큰술',
+        ],
+        steps: [
+          '볼에 고추장, 고춧가루, 진간장, 설탕, 다진 마늘, 맛술, 후추를 섞어 양념장을 만듭니다.',
+          '돼지고기에 양념장의 2/3를 넣고 조물조물 버무려 10분간 재워둡니다.',
+          '달군 팬에 고기를 먼저 넣고 센 불에서 볶다가 70% 익으면 어슷 썬 대파와 양파, 남은 양념을 넣습니다.',
+          '채소의 아삭함이 살아있을 때 불을 끄고 참기름과 통깨를 뿌려 마무리합니다.',
+        ],
+      },
+      {
+        id: 9,
+        title: '에그인헬 (토마토 샥슈카)',
+        category: '토마토',
+        time: '20분',
+        minutes: 20,
+        difficulty: '하',
+        servings: '2인분',
+        badge: 'NEW',
+        image: 'https://images.unsplash.com/photo-1590412227252-56743c50e0c6?auto=format&fit=crop&w=640&q=80',
+        description: '잘 익은 완숙 토마토를 진하게 끓인 스튜에 계란을 톡 깨 넣어 익힌 지중해식 브런치입니다. 바게트를 푹 찍어 드세요.',
+        ingredients: [
+          '완숙 토마토 3개 (또는 홀토마토 1캔)',
+          '계란 3개',
+          '양파 1/2개 & 마늘 3쪽',
+          '피자치즈 한 줌',
+          '올리브오일 2큰술',
+          '소금, 후추, 파슬리 가루',
+          '바게트 또는 식빵',
+        ],
+        steps: [
+          '토마토는 열십자로 칼집을 내어 끓는 물에 살짝 데친 뒤 껍질을 벗겨 굵게 다집니다.',
+          '팬에 올리브오일을 두르고 편 썬 마늘과 다진 양파를 투명해질 때까지 볶습니다.',
+          '다진 토마토와 물 반 컵, 소금, 후추를 넣고 중약불에서 8분간 걸쭉하게 끓입니다.',
+          '소스 군데군데 홈을 파서 계란을 깨 넣고 치즈를 뿌린 뒤 뚜껑을 덮어 반숙으로 익혀 마무리합니다.',
+        ],
+      },
+    ];
+
+    // 애플리케이션 상태 관리
+    let recipes = [...INITIAL_RECIPES];
+    let selectedCategory = 'ALL';
+    let currentView = 'all'; // 'all' | 'ingredients' | 'quick' | 'saved'
+    let searchQuery = '';
+    let savedIds = new Set([1, 5]); // 기본 스크랩 2개 세팅
+    let activeRecipeId = null;
+    let checkedIngredients = {}; // { recipeId: Set(index) }
+
+    // 초기 렌더링
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCategoryTabs();
+      updateSavedBadges();
+      renderRecipes();
+    });
+
+    // 주재료 카테고리 탭 렌더링
+    function renderCategoryTabs() {
+      const container = document.getElementById('ingredient-tabs');
+      container.innerHTML = CATEGORIES.map((cat) => {
+        const isActive = selectedCategory === cat.id;
+        return `
+          <button
+            onclick="selectCategory('${cat.id}')"
+            class="pb-1.5 transition-all border-b-2 ${
+              isActive
+                ? 'border-crimson text-crimson font-bold'
+                : 'border-transparent text-crimson/65 hover:text-crimson'
+            }"
+          >
+            ${cat.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    // 카테고리 선택
+    function selectCategory(catId) {
+      selectedCategory = catId;
+      if (currentView === 'saved') {
+        currentView = 'all';
+        updateNavStyles();
+      }
+      renderCategoryTabs();
+      renderRecipes();
+    }
+
+    // 상단 네비게이션 뷰 전환
+    function setNavView(view) {
+      currentView = view;
+      updateNavStyles();
+      if (view === 'ingredients') {
+        // 재료 탭 영역으로 부드럽게 스크롤
+        document.getElementById('ingredient-tabs').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      renderRecipes();
+    }
+
+    function updateNavStyles() {
+      ['all', 'ingredients', 'quick', 'saved'].forEach((v) => {
+        const el = document.getElementById(`nav-${v}`);
+        if (!el) return;
+        if (currentView === v) {
+          el.classList.remove('border-transparent', 'text-crimson/70');
+          el.classList.add('border-crimson', 'text-crimson');
+        } else {
+          el.classList.add('border-transparent', 'text-crimson/70');
+          el.classList.remove('border-crimson', 'text-crimson');
+        }
+      });
+    }
+
+    // 검색창 토글 및 검색 처리
+    function toggleSearchBar() {
+      const drawer = document.getElementById('search-drawer');
+      const input = document.getElementById('search-input');
+      drawer.classList.toggle('hidden');
+      if (!drawer.classList.contains('hidden')) {
+        input.focus();
+      }
+    }
+
+    function handleSearch(val) {
+      searchQuery = val.trim().toLowerCase();
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (searchQuery) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderRecipes();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('search-input');
+      input.value = '';
+      handleSearch('');
+      input.focus();
+    }
+
+    // 전체 필터 초기화
+    function resetFilters() {
+      selectedCategory = 'ALL';
+      currentView = 'all';
+      searchQuery = '';
+      const input = document.getElementById('search-input');
+      if (input) input.value = '';
+      document.getElementById('clear-search-btn')?.classList.add('hidden');
+      updateNavStyles();
+      renderCategoryTabs();
+      renderRecipes();
+    }
+
+    // 레시피 카드 그리드 렌더링
+    function renderRecipes() {
+      const grid = document.getElementById('recipe-grid');
+      const emptyState = document.getElementById('empty-state');
+      const statusText = document.getElementById('filter-status-text');
+      const resetBtn = document.getElementById('reset-all-btn');
+
+      // 필터링 로직
+      const filtered = recipes.filter((recipe) => {
+        // 1) 상단 뷰 필터
+        if (currentView === 'saved' && !savedIds.has(recipe.id)) return false;
+        if (currentView === 'quick' && recipe.minutes > 15) return false;
+
+        // 2) 주재료 탭 필터
+        if (selectedCategory !== 'ALL' && recipe.category !== selectedCategory) return false;
+
+        // 3) 검색어 필터 (제목, 주재료, 세부 재료, 설명)
+        if (searchQuery) {
+          const haystack = [
+            recipe.title,
+            recipe.category,
+            recipe.description,
+            ...recipe.ingredients,
+          ]
+            .join(' ')
+            .toLowerCase();
+          if (!haystack.includes(searchQuery)) return false;
+        }
+
+        return true;
+      });
+
+      // 상태 텍스트 업데이트
+      let labelParts = [];
+      if (currentView === 'saved') labelParts.push('스크랩한 레시피');
+      else if (currentView === 'quick') labelParts.push('15분 이하 초간단 요리');
+      else if (selectedCategory !== 'ALL') labelParts.push(`주재료: ${selectedCategory}`);
+      else labelParts.push('전체 레시피');
+
+      if (searchQuery) labelParts.push(`검색 "${searchQuery}"`);
+      statusText.textContent = `${labelParts.join(' · ')} (${filtered.length}개)`;
+
+      const isFiltered =
+        selectedCategory !== 'ALL' || currentView !== 'all' || searchQuery !== '';
+      resetBtn.classList.toggle('hidden', !isFiltered);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered
+        .map((recipe) => {
+          const isSaved = savedIds.has(recipe.id);
+          const fallbackImg =
+            CATEGORY_FALLBACK_IMAGES[recipe.category] || CATEGORY_FALLBACK_IMAGES['계란'];
+
+          return `
+            <article
+              onclick="openRecipeModal(${recipe.id})"
+              class="recipe-card group cursor-pointer flex flex-col items-center text-center px-2"
+            >
+              <!-- 크림 톤 위에 떠 있는 듯한 원형 프레임 음식 사진 -->
+              <div class="relative mb-5">
+                <div class="recipe-photo-wrap">
+                  <img
+                    src="${recipe.image}"
+                    alt="${recipe.title}"
+                    loading="lazy"
+                    onerror="this.onerror=null; this.src='${fallbackImg}';"
+                  />
+                </div>
+
+                <!-- 우측 상단 미니 북마크 토글 버튼 -->
+                <button
+                  onclick="event.stopPropagation(); toggleScrap(${recipe.id});"
+                  aria-label="${isSaved ? '스크랩 해제' : '스크랩하기'}"
+                  title="${isSaved ? '스크랩 해제' : '스크랩하기'}"
+                  class="absolute top-1 right-1 w-8 h-8 rounded-full bg-cream/95 border border-crimson/30 flex items-center justify-center text-crimson shadow-sm hover:scale-110 transition-transform"
+                >
+                  <svg class="w-4 h-4" fill="${isSaved ? '#A6332E' : 'none'}" stroke="#A6332E" stroke-width="1.7" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 4h12a1 1 0 011 1v15l-7-4-7 4V5a1 1 0 011-1z" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- 레시피 제목 (레퍼런스의 상품명 위치) -->
+              <h2 class="font-serif font-bold text-[16px] sm:text-[17px] text-crimson group-hover:text-crimson-dark transition-colors leading-snug">
+                ${recipe.title}
+              </h2>
+
+              <!-- 조리시간 · 난이도 · 주재료 (레퍼런스의 가격 위치) -->
+              <p class="mt-1 text-xs text-ink-muted font-sans">
+                ${recipe.time} · 난이도 ${recipe.difficulty} · <span class="text-crimson/85 font-medium">${recipe.category}</span>
+              </p>
+
+              <!-- 레퍼런스 하단의 타원형 NEW / BEST 배지 -->
+              <div class="mt-2.5 min-h-[22px] flex items-center justify-center gap-1.5">
+                ${recipe.badge ? `<span class="oval-pill-badge">${recipe.badge}</span>` : ''}
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+    }
+
+    // 스크랩(북마크) 토글
+    function toggleScrap(id) {
+      if (savedIds.has(id)) {
+        savedIds.delete(id);
+        showToast('스크랩북에서 제거되었습니다.');
+      } else {
+        savedIds.add(id);
+        showToast('레시피를 스크랩북에 저장했습니다.');
+      }
+      updateSavedBadges();
+      renderRecipes();
+      if (activeRecipeId === id) {
+        updateModalScrapButton(id);
+      }
+    }
+
+    function toggleScrapCurrent() {
+      if (activeRecipeId !== null) {
+        toggleScrap(activeRecipeId);
+      }
+    }
+
+    function updateSavedBadges() {
+      const count = savedIds.size;
+      document.getElementById('nav-saved-count').textContent = count;
+      const dot = document.getElementById('mobile-saved-dot');
+      if (dot) {
+        dot.classList.toggle('hidden', count === 0);
+      }
+    }
+
+    // ==========================================
+    // 레시피 상세 카드 모달 제어
+    // ==========================================
+    function openRecipeModal(id) {
+      const recipe = recipes.find((r) => r.id === id);
+      if (!recipe) return;
+
+      activeRecipeId = id;
+      if (!checkedIngredients[id]) {
+        checkedIngredients[id] = new Set();
+      }
+
+      const fallbackImg =
+        CATEGORY_FALLBACK_IMAGES[recipe.category] || CATEGORY_FALLBACK_IMAGES['계란'];
+
+      document.getElementById('modal-ingredient-tag').textContent = `주재료 · ${recipe.category}`;
+      const badgeEl = document.getElementById('modal-badge');
+      if (recipe.badge) {
+        badgeEl.textContent = recipe.badge;
+        badgeEl.classList.remove('hidden');
+      } else {
+        badgeEl.classList.add('hidden');
+      }
+
+      document.getElementById('modal-title').textContent = recipe.title;
+      document.getElementById('modal-subtitle').textContent = `조리시간 ${recipe.time} · 난이도 ${recipe.difficulty} · ${recipe.servings}`;
+      const imgEl = document.getElementById('modal-image');
+      imgEl.src = recipe.image;
+      imgEl.alt = recipe.title;
+      imgEl.onerror = function () {
+        this.onerror = null;
+        this.src = fallbackImg;
+      };
+
+      document.getElementById('modal-description').textContent = recipe.description;
+      document.getElementById('modal-time').textContent = recipe.time;
+      document.getElementById('modal-difficulty').textContent = `난이도 ${recipe.difficulty}`;
+      document.getElementById('modal-servings').textContent = recipe.servings;
+
+      renderModalIngredients(recipe);
+      renderModalSteps(recipe);
+      updateModalScrapButton(id);
+
+      document.getElementById('recipe-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRecipeModal() {
+      document.getElementById('recipe-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+      activeRecipeId = null;
+    }
+
+    function updateModalScrapButton(id) {
+      const isSaved = savedIds.has(id);
+      const btn = document.getElementById('modal-scrap-btn');
+      const icon = document.getElementById('modal-scrap-icon');
+      const text = document.getElementById('modal-scrap-text');
+
+      if (isSaved) {
+        btn.classList.add('bg-crimson', 'text-cream');
+        btn.classList.remove('text-crimson', 'hover:bg-crimson/10');
+        icon.setAttribute('fill', '#FBF9F5');
+        text.textContent = '스크랩됨';
+      } else {
+        btn.classList.remove('bg-crimson', 'text-cream');
+        btn.classList.add('text-crimson', 'hover:bg-crimson/10');
+        icon.setAttribute('fill', 'none');
+        text.textContent = '스크랩하기';
+      }
+    }
+
+    // 모달 재료 체크리스트 렌더링
+    function renderModalIngredients(recipe) {
+      const listEl = document.getElementById('modal-ingredients-list');
+      const checkedSet = checkedIngredients[recipe.id] || new Set();
+
+      document.getElementById('ingredient-check-progress').textContent =
+        `${checkedSet.size}/${recipe.ingredients.length} 준비됨`;
+
+      listEl.innerHTML = recipe.ingredients
+        .map((item, idx) => {
+          const isChecked = checkedSet.has(idx);
+          return `
+            <li>
+              <label class="flex items-center gap-2.5 p-2 rounded-lg cursor-pointer hover:bg-crimson/5 transition-colors select-none">
+                <input
+                  type="checkbox"
+                  ${isChecked ? 'checked' : ''}
+                  onchange="toggleIngredientCheck(${recipe.id}, ${idx})"
+                  class="w-4 h-4 rounded accent-[#A6332E] cursor-pointer"
+                />
+                <span class="${isChecked ? 'line-through text-ink-muted/60' : 'text-ink'}">
+                  ${item}
+                </span>
+              </label>
+            </li>
+          `;
+        })
+        .join('');
+    }
+
+    function toggleIngredientCheck(recipeId, idx) {
+      if (!checkedIngredients[recipeId]) {
+        checkedIngredients[recipeId] = new Set();
+      }
+      const set = checkedIngredients[recipeId];
+      if (set.has(idx)) {
+        set.delete(idx);
+      } else {
+        set.add(idx);
+      }
+      const recipe = recipes.find((r) => r.id === recipeId);
+      if (recipe) renderModalIngredients(recipe);
+    }
+
+    // 모달 조리 순서 렌더링
+    function renderModalSteps(recipe) {
+      const stepsEl = document.getElementById('modal-steps-list');
+      stepsEl.innerHTML = recipe.steps
+        .map(
+          (step, idx) => `
+          <li class="flex gap-3 p-3 rounded-xl bg-cream-card/80 border border-crimson/15">
+            <span class="shrink-0 w-6 h-6 rounded-full border border-crimson text-crimson font-serif font-bold text-xs flex items-center justify-center mt-0.5">
+              ${idx + 1}
+            </span>
+            <p class="text-ink leading-relaxed">${step}</p>
+          </li>
+        `
+        )
+        .join('');
+    }
+
+    // ==========================================
+    // 새 레시피 등록 모달 제어
+    // ==========================================
+    function openAddModal() {
+      document.getElementById('add-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddModal() {
+      document.getElementById('add-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function handleAddRecipe(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('new-title').value.trim();
+      const category = document.getElementById('new-category').value;
+      const badge = document.getElementById('new-badge').value;
+      const time = document.getElementById('new-time').value.trim() || '15분';
+      const difficulty = document.getElementById('new-difficulty').value;
+      const servings = document.getElementById('new-servings').value.trim() || '2인분';
+      const description = document.getElementById('new-desc').value.trim();
+      const rawIngredients = document.getElementById('new-ingredients').value;
+      const rawSteps = document.getElementById('new-steps').value;
+
+      const ingredients = rawIngredients
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const steps = rawSteps
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const parsedMinutes = parseInt(time.replace(/[^0-9]/g, ''), 10) || 15;
+
+      const newRecipe = {
+        id: Date.now(),
+        title,
+        category,
+        time,
+        minutes: parsedMinutes,
+        difficulty,
+        servings,
+        badge,
+        image: CATEGORY_FALLBACK_IMAGES[category] || CATEGORY_FALLBACK_IMAGES['계란'],
+        description,
+        ingredients: ingredients.length ? ingredients : [category],
+        steps: steps.length ? steps : ['재료를 손질해 맛있게 조리합니다.'],
+      };
+
+      recipes.unshift(newRecipe);
+      document.getElementById('add-recipe-form').reset();
+      closeAddModal();
+
+      // 방금 등록한 카테고리 또는 전체 탭으로 반영
+      selectedCategory = 'ALL';
+      currentView = 'all';
+      updateNavStyles();
+      renderCategoryTabs();
+      renderRecipes();
+      showToast(`'${title}' 레시피 카드가 추가되었습니다!`);
+    }
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeRecipeModal();
+        closeAddModal();
+      }
+    });
+
+    // 토스트 알림 함수
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2400);
+    }
+  </script>
+</body>
+</html>
