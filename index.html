@@ -15,7 +15,6 @@
             --text-muted: #7A7A7A;
             --border-color: #E8E2D5;
             --card-bg: #FFFFFF;
-            --accent-gold: #D4AF37;
         }
 
         * {
@@ -52,6 +51,7 @@
             color: var(--primary-color);
             text-decoration: none;
             letter-spacing: -0.5px;
+            cursor: pointer;
         }
 
         .nav-menu {
@@ -409,6 +409,11 @@
             padding-top: 20px;
         }
 
+        .modal-actions-left {
+            display: flex;
+            gap: 10px;
+        }
+
         .btn-delete-recipe {
             background-color: #fff2f2;
             color: #d9534f;
@@ -422,6 +427,22 @@
 
         .btn-delete-recipe:hover {
             background-color: #d9534f;
+            color: white;
+        }
+
+        .btn-edit-recipe {
+            background-color: #f0f4f8;
+            color: #205493;
+            border: 1px solid #205493;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-edit-recipe:hover {
+            background-color: #205493;
             color: white;
         }
 
@@ -502,7 +523,7 @@
 <body>
 
     <header>
-        <a href="#" class="logo-title" onclick="switchMainTab('재료'); return false;">얌얌 레시피</a>
+        <a class="logo-title" onclick="switchMainTab('재료')">얌얌 레시피</a>
         <ul class="nav-menu">
             <li><button id="navBtn-재료" class="active" onclick="switchMainTab('재료')">재료</button></li>
             <li><button id="navBtn-셰프" onclick="switchMainTab('셰프')">셰프</button></li>
@@ -528,14 +549,13 @@
             <button class="sub-cat-btn" onclick="filterSubCategory('토마토', this)">토마토</button>
         </div>
 
-        <!-- 하위 카테고리 (셰프 탭용 - 재료와 완전히 다르게 구성) -->
+        <!-- 하위 카테고리 (셰프 탭용) -->
         <div id="subCat-셰프" class="sub-categories" style="display: none;">
             <button class="sub-cat-btn active" onclick="filterChefCategory('전체', this)">전체 셰프</button>
             <button class="sub-cat-btn" onclick="filterChefCategory('백종원', this)">백종원</button>
             <button class="sub-cat-btn" onclick="filterChefCategory('흑백요리사', this)">흑백요리사</button>
             <button class="sub-cat-btn" onclick="filterChefCategory('어남선생', this)">어남선생(류수영)</button>
             <button class="sub-cat-btn" onclick="filterChefCategory('최현석', this)">최현석</button>
-            <button class="sub-cat-btn" onclick="filterChefCategory('나만의 레시피', this)">나만의 레시피</button>
         </div>
 
         <div class="search-bar-container">
@@ -547,9 +567,7 @@
     </section>
 
     <main>
-        <div class="recipe-grid" id="recipeGrid">
-            <!-- 동적 렌더링 -->
-        </div>
+        <div class="recipe-grid" id="recipeGrid"></div>
     </main>
 
     <footer>
@@ -573,40 +591,37 @@
             <ul id="modalSteps" class="step-list"></ul>
 
             <div class="modal-actions">
-                <button class="btn-delete-recipe" id="deleteRecipeBtn" onclick="deleteCurrentRecipe()"><i class="fa-solid fa-trash"></i> 레시피 삭제</button>
+                <div class="modal-actions-left">
+                    <button class="btn-delete-recipe" onclick="deleteCurrentRecipe()"><i class="fa-solid fa-trash"></i> 삭제</button>
+                    <button class="btn-edit-recipe" onclick="openEditModal()"><i class="fa-solid fa-pen"></i> 수정</button>
+                </div>
                 <button class="sub-cat-btn active" onclick="closeDetailModal()">닫기</button>
             </div>
         </div>
     </div>
 
-    <!-- 레시피 등록 모달 -->
+    <!-- 레시피 등록 및 수정 모달 -->
     <div class="modal-overlay" id="addModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeAddModal()"><i class="fa-solid fa-xmark"></i></button>
-            <h2 class="modal-title" style="margin-bottom: 20px;">나만의 레시피 등록</h2>
+            <h2 class="modal-title" id="formModalTitle" style="margin-bottom: 20px;">나만의 레시피 등록</h2>
             <form id="addRecipeForm" onsubmit="handleRecipeSubmit(event)">
+                <input type="hidden" id="editRecipeId">
                 <div class="form-group">
                     <label>요리 이름</label>
                     <input type="text" id="addTitle" required placeholder="예: 토마토 달걀 볶음">
                 </div>
                 <div class="form-group">
-                    <label>주재료 선택</label>
-                    <select id="addIngredientCategory">
-                        <option value="계란">계란</option>
-                        <option value="감자">감자</option>
-                        <option value="두부">두부</option>
-                        <option value="돼지고기">돼지고기</option>
-                        <option value="토마토">토마토</option>
+                    <label>어떤 분류에 등록할까요?</label>
+                    <select id="addMainCategory" onchange="updateSubCategoryOptions()">
+                        <option value="재료">재료별 레시피</option>
+                        <option value="셰프">셰프별 레시피</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>셰프 / 출처 선택</label>
-                    <select id="addChefCategory">
-                        <option value="나만의 레시피">나만의 레시피</option>
-                        <option value="백종원">백종원</option>
-                        <option value="흑백요리사">흑백요리사</option>
-                        <option value="어남선생">어남선생(류수영)</option>
-                        <option value="최현석">최현석</option>
+                    <label id="subCategoryLabel">세부 항목 선택</label>
+                    <select id="addSubCategory">
+                        <!-- 동적 바인딩 -->
                     </select>
                 </div>
                 <div class="form-group">
@@ -619,13 +634,13 @@
                 </div>
                 <div class="form-group">
                     <label>재료 목록 (쉼표로 구분)</label>
-                    <textarea id="addIngredientsList" required placeholder="예: 토마토 2개, 달걀 3개, 소금 약간, 설탕 0.5스푼"></textarea>
+                    <textarea id="addIngredientsList" required placeholder="예: 토마토 2개, 달걀 3개, 소금 약간"></textarea>
                 </div>
                 <div class="form-group">
                     <label>조리 순서 (줄바꿈으로 구분)</label>
-                    <textarea id="addStepsList" required placeholder="1. 토마토를 먹기 좋게 썹니다.&#10;2. 달걀을 풀어 스크램블을 합니다."></textarea>
+                    <textarea id="addStepsList" required placeholder="1. 토마토를 먹기 좋게 썹니다.&#10;2. 달걀을 풀어 볶습니다."></textarea>
                 </div>
-                <button type="submit" class="btn-submit">등록하기</button>
+                <button type="submit" class="btn-submit" id="formSubmitBtn">등록하기</button>
             </form>
         </div>
     </div>
@@ -635,8 +650,8 @@
             {
                 id: 1,
                 title: "폭신한 수플레 오믈렛",
-                ingredient: "계란",
-                chef: "최현석",
+                categoryType: "셰프",
+                subCategory: "최현석",
                 desc: "입에서 살살 녹는 부드러운 호텔식 수플레 오믈렛",
                 image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=600&auto=format&fit=crop&q=80",
                 ingredients: ["계란 3개", "버터 1조각", "설탕 1작은술", "소금 약간"],
@@ -645,8 +660,8 @@
             {
                 id: 2,
                 title: "백종원 감자조림",
-                ingredient: "감자",
-                chef: "백종원",
+                categoryType: "재료",
+                subCategory: "감자",
                 desc: "단짠단짠 밥도둑 필수 밑반찬 감자조림",
                 image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80",
                 ingredients: ["감자 3개", "간장 5스푼", "설탕 1.5스푼", "참기름 약간", "통깨"],
@@ -655,28 +670,28 @@
             {
                 id: 3,
                 title: "들기름 두부구이",
-                ingredient: "두부",
-                chef: "어남선생",
+                categoryType: "재료",
+                subCategory: "두부",
                 desc: "고소한 들기름 향이 일품인 영양 만점 두부구이",
                 image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
-                ingredients: ["두부 1모", "들기름 3스푼", "간장 양념장 (간장, 파, 마늘, 고춧가루)"],
-                steps: ["두부를 도톰하게 썰어 키친타월로 물기를 제거합니다.", "팬에 들기름을 두르고 두부를 노릇하게 부칩니다.", "양념장을 얹어 살짝 더 졸여냅니다."]
+                ingredients: ["두부 1모", "들기름 3스푼", "간장 양념장 (간장, 파, 마늘)"],
+                steps: ["두부를 도톰하게 썰어 물기를 제거합니다.", "팬에 들기름을 두르고 두부를 노릇하게 부칩니다.", "양념장을 얹어 살짝 더 졸여냅니다."]
             },
             {
                 id: 4,
                 title: "매콤달콤 제육볶음",
-                ingredient: "돼지고기",
-                chef: "백종원",
+                categoryType: "재료",
+                subCategory: "돼지고기",
                 desc: "누구나 좋아하는 최고의 불향 가득 제육볶음",
                 image: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=600&auto=format&fit=crop&q=80",
-                ingredients: ["돼지고기 앞다리살 400g", "고추장 2스푼", "고춧가루 2스푼", "간장 3스푼", "양파, 대파"],
+                ingredients: ["돼지고기 앞다리살 400g", "고추장 2스푼", "고춧가루 2스푼", "간장 3스푼"],
                 steps: ["분량의 양념장을 만들어 고기를 재워둡니다.", "달군 팬에 양념된 고기를 넣고 센 불로 볶습니다.", "채소를 넣고 숨이 죽을 때까지 마저 볶아줍니다."]
             },
             {
                 id: 5,
                 title: "나폴리 맛피아 토마토 파스타",
-                ingredient: "토마토",
-                chef: "흑백요리사",
+                categoryType: "셰프",
+                subCategory: "흑백요리사",
                 desc: "깊고 진한 풍미의 정통 이탈리안 토마토 파스타",
                 image: "https://images.unsplash.com/photo-1621996346565-e3d5d62847ba?w=600&auto=format&fit=crop&q=80",
                 ingredients: ["토마토 홀 1캔", "파스타 면 100g", "마늘 3쪽", "올리브오일", "바질"],
@@ -684,9 +699,9 @@
             },
             {
                 id: 6,
-                title: "마파두부 덮밥",
-                ingredient: "두부",
-                chef: "흑백요리사",
+                title: "백종원 마파두부 덮밥",
+                categoryType: "셰프",
+                subCategory: "백종원",
                 desc: "얼얼하고 매콤한 중독성 강한 마파두부",
                 image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop&q=80",
                 ingredients: ["두부 1모", "다진 돼지고기 100g", "두반장 2스푼", "고추기름", "전분물"],
@@ -719,7 +734,6 @@
                 subCatIngredient.style.display = 'flex';
                 subCatChef.style.display = 'none';
                 currentSubFilter = '전체';
-                // 첫번째 버튼 활성화
                 subCatIngredient.querySelectorAll('button').forEach((b, idx) => {
                     if(idx === 0) b.classList.add('active');
                     else b.classList.remove('active');
@@ -773,13 +787,15 @@
             const keyword = document.getElementById('searchInput').value.toLowerCase();
 
             let filtered = recipes.filter(r => {
-                const matchKeyword = r.title.toLowerCase().includes(keyword) || r.desc.toLowerCase().includes(keyword) || r.ingredient.toLowerCase().includes(keyword);
+                const matchKeyword = r.title.toLowerCase().includes(keyword) || r.desc.toLowerCase().includes(keyword) || r.subCategory.toLowerCase().includes(keyword);
                 if (!matchKeyword) return false;
 
                 if (currentMainTab === '재료') {
-                    if (currentSubFilter !== '전체' && r.ingredient !== currentSubFilter) return false;
+                    if (r.categoryType !== '재료') return false;
+                    if (currentSubFilter !== '전체' && r.subCategory !== currentSubFilter) return false;
                 } else if (currentMainTab === '셰프') {
-                    if (currentChefFilter !== '전체' && r.chef !== currentChefFilter) return false;
+                    if (r.categoryType !== '셰프') return false;
+                    if (currentChefFilter !== '전체' && r.subCategory !== currentChefFilter) return false;
                 } else if (currentMainTab === '스크랩북') {
                     if (!scrapList.includes(r.id)) return false;
                 }
@@ -802,7 +818,7 @@
                             <img src="${r.image}" alt="${r.title}">
                         </div>
                         <div class="recipe-info">
-                            <div class="recipe-meta-tag">${r.ingredient} · ${r.chef || '나만의 레시피'}</div>
+                            <div class="recipe-meta-tag">${r.categoryType} · ${r.subCategory}</div>
                             <div class="recipe-title">${r.title}</div>
                             <div class="recipe-desc">${r.desc}</div>
                             <div class="recipe-footer">
@@ -825,7 +841,7 @@
             if (!recipe) return;
 
             document.getElementById('modalImg').src = recipe.image;
-            document.getElementById('modalTag').innerText = `${recipe.ingredient} · ${recipe.chef || '나만의 레시피'}`;
+            document.getElementById('modalTag').innerText = `${recipe.categoryType} · ${recipe.subCategory}`;
             document.getElementById('modalTitle').innerText = recipe.title;
             document.getElementById('modalDesc').innerText = recipe.desc;
 
@@ -852,7 +868,54 @@
         }
 
         function openAddModal() {
+            document.getElementById('editRecipeId').value = '';
+            document.getElementById('formModalTitle').innerText = '나만의 레시피 등록';
+            document.getElementById('formSubmitBtn').innerText = '등록하기';
+            document.getElementById('addRecipeForm').reset();
+            updateSubCategoryOptions();
             document.getElementById('addModal').classList.add('open');
+        }
+
+        function openEditModal() {
+            closeDetailModal();
+            const recipe = recipes.find(r => r.id === currentSelectedRecipeId);
+            if (!recipe) return;
+
+            document.getElementById('editRecipeId').value = recipe.id;
+            document.getElementById('formModalTitle').innerText = '레시피 수정하기';
+            document.getElementById('formSubmitBtn').innerText = '수정 완료';
+
+            document.getElementById('addTitle').value = recipe.title;
+            document.getElementById('addMainCategory').value = recipe.categoryType;
+            updateSubCategoryOptions();
+            document.getElementById('addSubCategory').value = recipe.subCategory;
+            document.getElementById('addDesc').value = recipe.desc;
+            document.getElementById('addIngredientsList').value = recipe.ingredients.join(', ');
+            document.getElementById('addStepsList').value = recipe.steps.join('\n');
+
+            document.getElementById('addModal').classList.add('open');
+        }
+
+        function updateSubCategoryOptions() {
+            const mainCat = document.getElementById('addMainCategory').value;
+            const subSelect = document.getElementById('addSubCategory');
+            subSelect.innerHTML = '';
+
+            if (mainCat === '재료') {
+                ['계란', '감자', '두부', '돼지고기', '토마토'].forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item;
+                    opt.innerText = item;
+                    subSelect.appendChild(opt);
+                });
+            } else {
+                ['백종원', '흑백요리사', '어남선생', '최현석'].forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item;
+                    opt.innerText = item;
+                    subSelect.appendChild(opt);
+                });
+            }
         }
 
         function closeAddModal() {
@@ -862,9 +925,10 @@
 
         function handleRecipeSubmit(event) {
             event.preventDefault();
+            const editId = document.getElementById('editRecipeId').value;
             const title = document.getElementById('addTitle').value;
-            const ingredient = document.getElementById('addIngredientCategory').value;
-            const chef = document.getElementById('addChefCategory').value;
+            const categoryType = document.getElementById('addMainCategory').value;
+            const subCategory = document.getElementById('addSubCategory').value;
             const desc = document.getElementById('addDesc').value;
             const ingredientsRaw = document.getElementById('addIngredientsList').value;
             const stepsRaw = document.getElementById('addStepsList').value;
@@ -878,34 +942,54 @@
                 "감자": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80",
                 "두부": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
                 "돼지고기": "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=600&auto=format&fit=crop&q=80",
-                "토마토": "https://images.unsplash.com/photo-1621996346565-e3d5d62847ba?w=600&auto=format&fit=crop&q=80"
+                "토마토": "https://images.unsplash.com/photo-1621996346565-e3d5d62847ba?w=600&auto=format&fit=crop&q=80",
+                "백종원": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80",
+                "흑백요리사": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&auto=format&fit=crop&q=80",
+                "어남선생": "https://images.unsplash.com/photo-1507048331137-7a3c913ea653?w=600&auto=format&fit=crop&q=80",
+                "최현석": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&auto=format&fit=crop&q=80"
             };
 
             if (imageFile) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    saveNewRecipe(title, ingredient, chef, desc, ingredients, steps, e.target.result);
+                    saveRecipeData(editId, title, categoryType, subCategory, desc, ingredients, steps, e.target.result);
                 };
                 reader.readAsDataURL(imageFile);
             } else {
-                const fallbackImg = defaultImages[ingredient] || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80";
-                saveNewRecipe(title, ingredient, chef, desc, ingredients, steps, fallbackImg);
+                let existingImage = null;
+                if (editId) {
+                    const existing = recipes.find(r => r.id == editId);
+                    if (existing) existingImage = existing.image;
+                }
+                const fallbackImg = existingImage || defaultImages[subCategory] || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80";
+                saveRecipeData(editId, title, categoryType, subCategory, desc, ingredients, steps, fallbackImg);
             }
         }
 
-        function saveNewRecipe(title, ingredient, chef, desc, ingredients, steps, image) {
-            const newRecipe = {
-                id: Date.now(),
-                title,
-                ingredient,
-                chef,
-                desc,
-                image,
-                ingredients,
-                steps
-            };
+        function saveRecipeData(editId, title, categoryType, subCategory, desc, ingredients, steps, image) {
+            if (editId) {
+                // 수정
+                recipes = recipes.map(r => {
+                    if (r.id == editId) {
+                        return { ...r, title, categoryType, subCategory, desc, ingredients, steps, image };
+                    }
+                    return r;
+                });
+            } else {
+                // 신규 등록
+                const newRecipe = {
+                    id: Date.now(),
+                    title,
+                    categoryType,
+                    subCategory,
+                    desc,
+                    image,
+                    ingredients,
+                    steps
+                };
+                recipes.unshift(newRecipe);
+            }
 
-            recipes.unshift(newRecipe);
             saveData();
             closeAddModal();
             renderRecipes();
@@ -921,6 +1005,7 @@
         }
 
         // 초기 렌더링 실행
+        updateSubCategoryOptions();
         renderRecipes();
     </script>
 </body>
