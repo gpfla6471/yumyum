@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>얌얌 레시피 (Yum Yum Recipe)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Pantry & Plate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #FBF9F5;
-            --primary-color: #A6332E;
-            --primary-dark: #822521;
+            --primary-color: #9E2A2B;
+            --primary-dark: #741E1F;
             --text-main: #2C2C2C;
             --text-muted: #7A7A7A;
             --border-color: #E8E2D5;
@@ -45,9 +45,9 @@
         }
 
         .logo-title {
-            font-family: 'Nanum Myeongjo', serif;
+            font-family: 'Cinzel', serif;
             font-size: 24px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
             letter-spacing: -0.5px;
@@ -56,8 +56,9 @@
 
         .nav-menu {
             display: flex;
-            gap: 30px;
+            gap: 35px;
             list-style: none;
+            align-items: center;
         }
 
         .nav-menu button {
@@ -79,33 +80,50 @@
         .nav-menu button.active::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -2px;
             left: 0;
             width: 100%;
             height: 2px;
             background-color: var(--primary-color);
         }
 
+        .scrap-badge {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            font-weight: 700;
+        }
+
         .header-actions {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
         }
 
+        .header-search-icon {
+            font-size: 18px;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
         .btn-add-recipe {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 8px 18px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
         }
 
         .btn-add-recipe:hover {
-            background-color: var(--primary-dark);
+            background-color: var(--primary-color);
+            color: white;
         }
 
         .hero-section {
@@ -115,18 +133,29 @@
 
         .emblem-badge {
             display: inline-block;
-            border: 2px solid var(--primary-color);
-            border-radius: 50px;
-            padding: 10px 35px;
+            border: 1px solid var(--primary-color);
+            border-radius: 60px;
+            padding: 14px 45px;
             margin-bottom: 25px;
+            position: relative;
+            box-shadow: inset 0 0 0 1px var(--primary-color);
         }
 
         .emblem-badge h1 {
-            font-family: 'Nanum Myeongjo', serif;
+            font-family: 'Cinzel', serif;
             font-size: 32px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--primary-color);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emblem-badge h1::before, .emblem-badge h1::after {
+            content: '✦';
+            font-size: 14px;
+            color: var(--primary-color);
         }
 
         .sub-categories {
@@ -523,20 +552,21 @@
 <body>
 
     <header>
-        <a class="logo-title" onclick="switchMainTab('재료')">얌얌 레시피</a>
+        <a class="logo-title" onclick="switchMainTab('재료')">Pantry & Plate</a>
         <ul class="nav-menu">
             <li><button id="navBtn-재료" class="active" onclick="switchMainTab('재료')">재료</button></li>
             <li><button id="navBtn-셰프" onclick="switchMainTab('셰프')">셰프</button></li>
-            <li><button id="navBtn-스크랩북" onclick="switchMainTab('스크랩북')">스크랩북</button></li>
+            <li><button id="navBtn-스크랩북" onclick="switchMainTab('스크랩북')">스크랩북 <span class="scrap-badge" id="scrapCountBadge">0</span></button></li>
         </ul>
         <div class="header-actions">
-            <button class="btn-add-recipe" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> 레시피 등록</button>
+            <i class="fa-solid fa-magnifying-glass header-search-icon" onclick="focusSearch()"></i>
+            <button class="btn-add-recipe" onclick="openAddModal()">+ 레시피 등록</button>
         </div>
     </header>
 
     <section class="hero-section">
         <div class="emblem-badge">
-            <h1>✦ 얌얌 레시피 ✦</h1>
+            <h1>Pantry & Plate</h1>
         </div>
 
         <!-- 하위 카테고리 (재료 탭용) -->
@@ -571,7 +601,7 @@
     </main>
 
     <footer>
-        <span>&copy; Yum Yum Recipe. All Rights Reserved.</span>
+        <span>&copy; Pantry & Plate. All Rights Reserved.</span>
         <button class="btn-reset-default" onclick="resetDefaultRecipes()">기본 레시피 초기화</button>
     </footer>
 
@@ -604,7 +634,7 @@
     <div class="modal-overlay" id="addModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeAddModal()"><i class="fa-solid fa-xmark"></i></button>
-            <h2 class="modal-title" id="formModalTitle" style="margin-bottom: 20px;">나만의 레시피 등록</h2>
+            <h2 class="modal-title" id="formModalTitle" style="margin-bottom: 20px;">레시피 등록</h2>
             <form id="addRecipeForm" onsubmit="handleRecipeSubmit(event)">
                 <input type="hidden" id="editRecipeId">
                 <div class="form-group">
@@ -612,14 +642,14 @@
                     <input type="text" id="addTitle" required placeholder="예: 토마토 달걀 볶음">
                 </div>
                 <div class="form-group">
-                    <label>어떤 분류에 등록할까요?</label>
+                    <label>어느 목록에 추가할까요?</label>
                     <select id="addMainCategory" onchange="updateSubCategoryOptions()">
-                        <option value="재료">재료별 레시피</option>
-                        <option value="셰프">셰프별 레시피</option>
+                        <option value="재료">재료 목록</option>
+                        <option value="셰프">셰프 목록</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label id="subCategoryLabel">세부 항목 선택</label>
+                    <label id="subCategoryLabel">상세 분류 선택</label>
                     <select id="addSubCategory">
                         <!-- 동적 바인딩 -->
                     </select>
@@ -720,6 +750,11 @@
         function saveData() {
             localStorage.setItem('yam_recipes', JSON.stringify(recipes));
             localStorage.setItem('yam_scraps', JSON.stringify(scrapList));
+            document.getElementById('scrapCountBadge').innerText = scrapList.length;
+        }
+
+        function focusSearch() {
+            document.getElementById('searchInput').focus();
         }
 
         function switchMainTab(tabName) {
@@ -785,6 +820,7 @@
         function renderRecipes() {
             const grid = document.getElementById('recipeGrid');
             const keyword = document.getElementById('searchInput').value.toLowerCase();
+            document.getElementById('scrapCountBadge').innerText = scrapList.length;
 
             let filtered = recipes.filter(r => {
                 const matchKeyword = r.title.toLowerCase().includes(keyword) || r.desc.toLowerCase().includes(keyword) || r.subCategory.toLowerCase().includes(keyword);
@@ -869,7 +905,7 @@
 
         function openAddModal() {
             document.getElementById('editRecipeId').value = '';
-            document.getElementById('formModalTitle').innerText = '나만의 레시피 등록';
+            document.getElementById('formModalTitle').innerText = '레시피 등록';
             document.getElementById('formSubmitBtn').innerText = '등록하기';
             document.getElementById('addRecipeForm').reset();
             updateSubCategoryOptions();
@@ -968,7 +1004,6 @@
 
         function saveRecipeData(editId, title, categoryType, subCategory, desc, ingredients, steps, image) {
             if (editId) {
-                // 수정
                 recipes = recipes.map(r => {
                     if (r.id == editId) {
                         return { ...r, title, categoryType, subCategory, desc, ingredients, steps, image };
@@ -976,7 +1011,6 @@
                     return r;
                 });
             } else {
-                // 신규 등록
                 const newRecipe = {
                     id: Date.now(),
                     title,
@@ -1004,8 +1038,9 @@
             }
         }
 
-        // 초기 렌더링 실행
+        // 초기 실행
         updateSubCategoryOptions();
+        saveData();
         renderRecipes();
     </script>
 </body>
